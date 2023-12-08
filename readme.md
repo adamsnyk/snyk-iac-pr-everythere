@@ -1,8 +1,8 @@
-# README for GitHub Repository Processing Script
+# README for IaC PR checks on all repos
 
 ## Overview
 
-This script is designed to automate the process of adding a specific GitHub Actions workflow file (`snyk-iac-pr.yml`) to repositories within a specified GitHub organization. It targets repositories containing infrastructure-related files (like Terraform, Kubernetes, or CloudFormation) and adds a Snyk token as a GitHub Actions secret for each repository.
+This script is designed to automate the process of adding the IaC PR checks workflow file (`snyk-iac-pr.yml`) to repositories within a specified GitHub organization. It targets repositories containing infrastructure-related files (like Terraform, Kubernetes, or CloudFormation) and adds a Snyk token as a GitHub Actions secret for each repository.
 
 ## Getting Started
 
