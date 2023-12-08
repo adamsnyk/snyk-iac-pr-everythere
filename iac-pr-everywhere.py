@@ -5,19 +5,21 @@ from github import Github
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric import padding
 from cryptography.hazmat.backends import default_backend
-from cryptography.hazmat.primitives import hashes
 
-# Parsing command-line arguments for GitHub and Snyk tokens
-if len(sys.argv) != 3 or not sys.argv[1].startswith("GITHUB_ORG=") or not sys.argv[2].startswith("SNYK_TOKEN="):
-    raise ValueError("Usage: python iac-pr-everywhere.py GITHUB_ORG=your_org_name SNYK_TOKEN=your_snyk_token")
+# Parsing command-line argument for GitHub organization
+if len(sys.argv) != 2 or not sys.argv[1].startswith("GITHUB_ORG="):
+    raise ValueError("Usage: python iac-pr-everywhere.py GITHUB_ORG=your_org_name")
 
 org_name = sys.argv[1].split("=")[1]
-snyk_token = sys.argv[2].split("=")[1]
 
-# Authentication - using an environment variable for the GitHub token
+# Authentication - using environment variables for the GitHub and Snyk tokens
 github_token = os.getenv('GITHUB_TOKEN')
+snyk_token = os.getenv('SNYK_TOKEN')
+
 if not github_token:
     raise Exception("GitHub token not found in environment variables")
+if not snyk_token:
+    raise Exception("Snyk token not found in environment variables")
 
 g = Github(github_token)
 

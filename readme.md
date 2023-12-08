@@ -1,25 +1,65 @@
-# Snyk IaC PR Everywhere
+# README for GitHub Repository Processing Script
 
-### Run Snyk IaC PR checks across all repos (containing IaC)
+## Overview
 
-Running the script.
+This script is designed to automate the process of adding a specific GitHub Actions workflow file (`snyk-iac-pr.yml`) to repositories within a specified GitHub organization. It targets repositories containing infrastructure-related files (like Terraform, Kubernetes, or CloudFormation) and adds a Snyk token as a GitHub Actions secret for each repository.
 
-```
-export GITHUB_TOKEN=your_token_here
-python iac-pr-everywhere.py GITHUB_ORG=my_org_here SNYK_TOKEN=snyk_token_here
-```
+## Getting Started
 
-How the script works
+### Prerequisites
 
-1. Connect to the GH org specified
-2. Go through each repo
-3. If the repo contains IaC files
-   - Add `SNYK_TOKEN` as a repo secret
-   - Add `.github/workflows/snyk-iac-pr.yml` as a PR checker
-   - Open a pull request to add these files
+- Python 3.x installed on your system.
+- A GitHub account and a personal access token with appropriate permissions.
+- A Snyk account and a Snyk token.
 
-After the script runs, your developers can accept IaC PR checks!
+### Installation
 
-(Maybe put it into a cron job to add new repos?) I'd have to edit this a bit to handle that ;)
+1. **Clone or Download the Repository**
 
-(6d81e448-45c0-47a0-b7d8-bc708aea1933 chat Id for my own sanity to keep progressing)
+   - Clone this repository to your local machine or download the source code.
+
+2. **Install Required Python Packages**
+   - Navigate to the root directory of the project where the `requirements.txt` file is located.
+   - Create a virtual environment (recommended) to isolate the project dependencies:
+     - For Windows: `python -m venv venv`
+     - For Linux/macOS: `python3 -m venv venv`
+   - Activate the virtual environment:
+     - For Windows: `.env\Scriptsctivate`
+     - For Linux/macOS: `source venv/bin/activate`
+   - Install the dependencies: `pip install -r requirements.txt`
+
+### Configuration
+
+1. **Set Environment Variables**
+
+   - Set the `GITHUB_TOKEN` and `SNYK_TOKEN` environment variables with your GitHub and Snyk tokens, respectively.
+
+     - For Windows (CMD):
+       - `set GITHUB_TOKEN=your_github_token`
+       - `set SNYK_TOKEN=your_snyk_token`
+     - For Windows (PowerShell):
+       - `$env:GITHUB_TOKEN="your_github_token"`
+       - `$env:SNYK_TOKEN="your_snyk_token"`
+     - For Linux/macOS:
+       - `export GITHUB_TOKEN=your_github_token`
+       - `export SNYK_TOKEN=your_snyk_token`
+
+   - Replace `your_github_token` and `your_snyk_token` with the actual tokens.
+
+### Usage
+
+1. **Running the Script**
+   - With the environment variables set and dependencies installed, you can run the script using the following command:
+     - `python iac-pr-everywhere.py GITHUB_ORG=your_org_name`
+   - Replace `your_org_name` with the name of your GitHub organization.
+
+## Important Notes
+
+- Keep your tokens confidential to prevent unauthorized access.
+- Ensure that your GitHub token has the necessary permissions for the script to function correctly.
+- Test the script in a controlled environment before using it in production.
+- Deactivate your virtual environment after use with the `deactivate` command.
+
+---
+
+This README provides instructions for setting up, configuring, and running the script. Modify and use it according to your project's needs!
