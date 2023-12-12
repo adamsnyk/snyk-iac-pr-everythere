@@ -48,7 +48,11 @@ This script is designed to automate the process of adding the IaC PR checks work
 
 ### Usage
 
-1. **Running the Script**
+1. **Adding repo names**
+
+   - Go to line 5 in `iac-pr-everywhere.py` and add repo names to `repo_names = []` in order to add enable PR checks for them! OR chance the value to `'*'` if you want all repos added.
+
+2. **Running the Script**
    - With the environment variables set and dependencies installed, you can run the script using the following command:
      - `python iac-pr-everywhere.py GITHUB_ORG=your_org_name`
    - Replace `your_org_name` with the name of your GitHub organization.
