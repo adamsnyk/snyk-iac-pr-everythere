@@ -2,7 +2,7 @@ import os
 import sys
 from github import Github
 
-repo_names = ['react-chat-engine']
+repo_names = []
 
 # Parsing command-line argument for GitHub organization
 if len(sys.argv) != 2 or not sys.argv[1].startswith("GITHUB_ORG="):
