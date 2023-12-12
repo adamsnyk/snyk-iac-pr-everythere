@@ -30,7 +30,7 @@ with open(file_path, 'r') as file:
 content = file_content
 
 for repo in org.get_repos():
-    if repo.name not in repo_names:
+    if repo_names!= '*' and repo.name not in repo_names:
         print(f"Skipping repo: {repo.name}")
         continue
 
