@@ -3,7 +3,7 @@ import sys
 import time
 from github import Github
 
-repo_names = []
+repo_names = ['react-chat-engine']
 
 # Parsing command-line argument for GitHub organization
 if len(sys.argv) != 2 or not sys.argv[1].startswith("GITHUB_ORG="):
@@ -46,12 +46,31 @@ except:
 
 
 for repo in repos:
-    if repo_names!= '*' and repo.name not in repo_names:
-        print(f"Skipping repo: {repo.name}")
-        continue
-
     print(f"Processing repo: {repo.name}")
     default_branch = repo.default_branch
+
+    # Check if the file already exists
+    workflows_path = ".github/workflows/snyk-iac-pr.yml"
+    try:
+        repo.get_contents(workflows_path)
+        print(f" - File already exists. Skipping...")
+        time.sleep(1)
+        continue
+    except:
+        print(f" - File does not exist")
+        pass
+    
+
+    # Check if the PR already exists
+    try:
+        prs = repo.get_pulls(state='open', head=f'{org_name}:add-snyk-iac-pr-file')
+        time.sleep(1)
+        if prs.totalCount > 0:
+            print(f" - PR already exists. Skipping...")
+            continue
+    except:
+        print(f" - PR does not exist")
+        pass
 
     # Create a GH action secret for Snyk token
     repo.create_secret("SNYK_TOKEN", snyk_token)
@@ -66,7 +85,6 @@ for repo in repos:
     time.sleep(1)
 
     # Create the .github/workflows directory if it does not exist and add the new file
-    workflows_path = ".github/workflows/snyk-iac-pr.yml"
     repo.create_file(path=workflows_path,
                         message="Add Snyk IAC PR GitHub Action",
                         content=content,
@@ -78,9 +96,11 @@ for repo in repos:
     repo.create_pull(title="Add Snyk IAC PR GitHub Action",
                         body="Automated PR to add Snyk IAC PR GitHub Action",
                         head=target_branch,
-                        base=default_branch)
+                        base=default_branch) 
     print(f" - Created PR")
+    time.sleep(1)
+
     print(f" - Sleeping for 10s")
-    time.sleep(10)
+    time.sleep(9) # 9 because of time.sleep(1) above
 
 print("Script completed.")
