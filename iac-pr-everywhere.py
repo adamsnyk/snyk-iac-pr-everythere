@@ -3,7 +3,7 @@ import sys
 import time
 from github import Github
 
-repo_names = []
+repo_names = ['react-chat-engine']
 
 # Parsing command-line argument for GitHub organization
 if len(sys.argv) != 2 or not sys.argv[1].startswith("GITHUB_ORG="):
@@ -30,22 +30,35 @@ with open(file_path, 'r') as file:
     file_content = file.read()
 content = file_content
 
-for repo in org.get_repos():
-    if repo_names!= '*' and repo.name not in repo_names:
-        print(f"Skipping repo: {repo.name}")
-        continue
+# Collect repo objects from the names provided
+repos = []
+try:
+    if repo_names == '*':
+        repos = org.get_repos()
+    else:
+        for repo_name in repo_names:
+            repo = org.get_repo(repo_name)
+            repos.append(repo)
+            time.sleep(1)
+    print(f"Collected repos for: {repo_names}")
+except:
+    print(f"Failed to create repository objects for: {repo_names}")
 
+
+for repo in repos:
     print(f"Processing repo: {repo.name}")
     default_branch = repo.default_branch
 
     # Create a GH action secret for Snyk token
     repo.create_secret("SNYK_TOKEN", snyk_token)
+    print(f" - Created secret")
     time.sleep(1)
 
     # Create a new branch from the default branch
     target_branch = 'add-snyk-iac-pr-file'
     source_branch_ref = repo.get_git_ref(f'heads/{default_branch}')
     repo.create_git_ref(ref=f'refs/heads/{target_branch}', sha=source_branch_ref.object.sha)
+    print(f" - Created branch")
     time.sleep(1)
 
     # Create the .github/workflows directory if it does not exist and add the new file
@@ -54,6 +67,7 @@ for repo in org.get_repos():
                         message="Add Snyk IAC PR GitHub Action",
                         content=content,
                         branch=target_branch)
+    print(f" - Added file ")
     time.sleep(1)
 
     # Create a pull request
@@ -61,8 +75,10 @@ for repo in org.get_repos():
                         body="Automated PR to add Snyk IAC PR GitHub Action",
                         head=target_branch,
                         base=default_branch)
-    time.sleep(10)
+    print(f" - Created PR")
+    time.sleep(1)
 
-    print(f"Pull request created for repo: {repo.name}")
+    print(f" - Sleeping for 10s")
+    time.sleep(9) # 9 because of time.sleep(1) above
 
 print("Script completed.")
