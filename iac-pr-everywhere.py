@@ -57,10 +57,8 @@ for repo in repos:
         time.sleep(1)
         continue
     except:
-        print(f" - File does not exist")
         pass
     
-
     # Check if the PR already exists
     try:
         prs = repo.get_pulls(state='open', head=f'{org_name}:add-snyk-iac-pr-file')
