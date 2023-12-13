@@ -30,7 +30,22 @@ with open(file_path, 'r') as file:
     file_content = file.read()
 content = file_content
 
-for repo in org.get_repos():
+# Collect repo objects from the names provided
+repos = []
+try:
+    if repo_names == '*':
+        repos = org.get_repos()
+    else:
+        for repo_name in repo_names:
+            repo = org.get_repo(repo_name)
+            repos.append(repo)
+            time.sleep(1)
+    print(f"Collected repos for: {repo_names}")
+except:
+    print(f"Failed to create repository objects for: {repo_names}")
+
+
+for repo in repos:
     if repo_names!= '*' and repo.name not in repo_names:
         print(f"Skipping repo: {repo.name}")
         continue
