@@ -49,6 +49,29 @@ for repo in repos:
     print(f"Processing repo: {repo.name}")
     default_branch = repo.default_branch
 
+    # Check if the file already exists
+    workflows_path = ".github/workflows/snyk-iac-pr.yml"
+    try:
+        repo.get_contents(workflows_path)
+        print(f" - File already exists. Skipping...")
+        time.sleep(1)
+        continue
+    except:
+        print(f" - File does not exist")
+        pass
+    
+
+    # Check if the PR already exists
+    try:
+        prs = repo.get_pulls(state='open', head=f'{org_name}:add-snyk-iac-pr-file')
+        time.sleep(1)
+        if prs.totalCount > 0:
+            print(f" - PR already exists. Skipping...")
+            continue
+    except:
+        print(f" - PR does not exist")
+        pass
+
     # Create a GH action secret for Snyk token
     repo.create_secret("SNYK_TOKEN", snyk_token)
     print(f" - Created secret")
@@ -62,7 +85,6 @@ for repo in repos:
     time.sleep(1)
 
     # Create the .github/workflows directory if it does not exist and add the new file
-    workflows_path = ".github/workflows/snyk-iac-pr.yml"
     repo.create_file(path=workflows_path,
                         message="Add Snyk IAC PR GitHub Action",
                         content=content,
@@ -74,7 +96,7 @@ for repo in repos:
     repo.create_pull(title="Add Snyk IAC PR GitHub Action",
                         body="Automated PR to add Snyk IAC PR GitHub Action",
                         head=target_branch,
-                        base=default_branch)
+                        base=default_branch) 
     print(f" - Created PR")
     time.sleep(1)
 
